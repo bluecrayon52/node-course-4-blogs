@@ -80,7 +80,7 @@ describe('When NOT logged in', async () => {
     test('Blog related actions are prohibited', async () => {
         const results = await page.execRequests(actions);
         for (let result of results) {
-            expect(result).toEqual('You must log in!'); 
+            expect(result.error).toEqual('You must log in!'); 
         }
     });
     // test('User cannot create blog posts', async () => {

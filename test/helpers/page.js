@@ -34,6 +34,42 @@ class CustomPage {
         return this.page.$eval(selector, el => el.innerHTML); 
     }
 
+    post(path, data) {
+        return this.page.evaluate(
+            (_path, _data) => {
+                return fetch(_path, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({title: _data.title , content: _data.content})
+                }).then( res => res.json()); 
+            }, path, data);
+    }
+
+    get(path) {
+        return this.page.evaluate(
+            (_path) => {
+                return fetch(_path, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json()); 
+            }, path);
+    }
+
+    execRequests(actions) {
+        return Promise.all(
+            actions.map(({method, path, data}) => {
+                return this[method](path, data); 
+            })
+        );
+    }
+
+
     constructor(page) {
         this.page = page; 
     }
